@@ -6,12 +6,14 @@ Built with **React 19 + Vite 8 + Leaflet**. Designed as a pure static single-pag
 
 ---
 
-## ✨ Features (Version 1.2)
+## ✨ Features (Version 1.3)
 
 ### 📍 Live Map & GPS Navigation
 - **CartoDB Dark Matter Tiles:** A high-contrast, premium dark-mode interface optimized for outdoor and indoor visibility.
 - **Accuracy Safeguards:** Drops low-quality GPS updates (multipath errors inside concrete buildings) where accuracy is $>50\text{ m}$.
-- **Orientation Flashlight:** Utilizes the device compass (`coords.heading`) to project a directional "flashlight" beam around the user’s location marker.
+- **Compass Heading Cone:** Uses the device compass via the **DeviceOrientation API** (with iOS `webkitCompassHeading` and Android `alpha` support) to render a Google Maps-style **directional cone** on the user's blue dot, showing which direction they're facing — even when standing still.
+- **Bearing Indicator:** The navigation panel shows a directional arrow (↗, ↑, ←, etc.) pointing toward the destination so users can orient themselves.
+- **Location Permission Banner:** When GPS is denied or unavailable, a prominent banner with clear instructions and a reload button guides users to enable location access.
 
 ### 🔀 Dijkstra Routing Engine
 - **Graph-Based Shortest Paths:** Snap raw user GPS coordinates to the nearest campus junction/entrance node and dynamically compute the shortest path.
@@ -56,15 +58,15 @@ src/
 │   ├── CampusInfoModal.jsx   # Guest Wi-Fi details & emergency contact hotline
 │   ├── GpsErrorScreen.jsx    # GPS permission error fallback screen
 │   ├── MapView.jsx           # Leaflet map with user compass dot, polyline, & pins
-│   ├── NavigationPanel.jsx   # Walk progress bar, metrics, Web Share & Wake Lock APIs
+│   ├── NavigationPanel.jsx   # Collapsible nav bar with distance, ETA, bearing & guidance
 │   └── VenueSelector.jsx     # Searchable building/room directory with badges
 ├── data/
 │   ├── campus-graph.json     # 🗺️ Navigational graph nodes & edges
 │   └── venues.json           # 🏢 Conference stages, rooms, and metadata
 ├── hooks/
-│   └── useGeolocation.js     # High-accuracy GPS tracking hook
+│   └── useGeolocation.js     # High-accuracy GPS + DeviceOrientation compass heading hook
 ├── utils/
-│   ├── distance.js           # Haversine distance computations
+│   ├── distance.js           # Haversine distance, bearing, and compass formatting
 │   └── routing.js            # Dijkstra shortest path & node snapping utilities
 ├── App.jsx                   # Root application state & deep-link routing
 ├── App.css                   # Layout, animations, and component styles

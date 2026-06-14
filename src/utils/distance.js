@@ -54,3 +54,52 @@ export function formatFloor(floor) {
   if (floorStr === '3') return '3rd Floor';
   return `${floor}th Floor`;
 }
+
+/**
+ * Compute initial bearing (forward azimuth) from point 1 to point 2.
+ * Returns degrees 0-360 (0 = North, 90 = East, 180 = South, 270 = West).
+ * Returns null if any input is not finite.
+ */
+export function getBearing(lat1, lng1, lat2, lng2) {
+  if (!Number.isFinite(lat1) || !Number.isFinite(lng1) ||
+      !Number.isFinite(lat2) || !Number.isFinite(lng2)) {
+    return null;
+  }
+
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const toDeg = (rad) => (rad * 180) / Math.PI;
+
+  const φ1 = toRad(lat1);
+  const φ2 = toRad(lat2);
+  const Δλ = toRad(lng2 - lng1);
+
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+
+  return (toDeg(Math.atan2(y, x)) + 360) % 360;
+}
+
+/**
+ * Convert a bearing (0-360°) to a human-readable compass direction with arrow.
+ * Returns object { label, arrow } e.g. { label: "North-East", arrow: "↗" }
+ */
+export function formatBearing(bearing) {
+  if (bearing === null || !Number.isFinite(bearing)) {
+    return { label: '--', arrow: '' };
+  }
+
+  const directions = [
+    { label: 'North',       arrow: '↑' },
+    { label: 'North-East',  arrow: '↗' },
+    { label: 'East',        arrow: '→' },
+    { label: 'South-East',  arrow: '↘' },
+    { label: 'South',       arrow: '↓' },
+    { label: 'South-West',  arrow: '↙' },
+    { label: 'West',        arrow: '←' },
+    { label: 'North-West',  arrow: '↖' },
+  ];
+
+  const index = Math.round(bearing / 45) % 8;
+  return directions[index];
+}
+

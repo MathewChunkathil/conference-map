@@ -346,10 +346,20 @@ export default function App() {
           </div>
         )}
 
-        {/* GPS error toast (non-blocking) */}
+        {/* Location permission banner — shown when GPS denied or unavailable */}
         {gpsError && !gpsLoading && (
-          <div className="gps-toast">
-            <span>⚠ GPS unavailable — map reference mode</span>
+          <div className="gps-permission-banner">
+            <div className="gps-permission-icon">📍</div>
+            <div className="gps-permission-text">
+              <strong>Location access needed</strong>
+              <span>Tap the 🔒 icon in your browser's address bar → allow location access, then reload.</span>
+            </div>
+            <button
+              className="gps-permission-reload"
+              onClick={() => window.location.reload()}
+            >
+              Reload
+            </button>
           </div>
         )}
       </main>

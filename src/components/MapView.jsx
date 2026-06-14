@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, useMap, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -28,25 +28,51 @@ const destinationIcon = new L.DivIcon({
 });
 
 /**
- * Build a user location DivIcon with heading rotation for the flashlight effect.
- * When heading is available, a directional wedge is rendered; otherwise a plain dot.
+ * Build a user location DivIcon with a directional cone (Google Maps style).
+ * When heading is available, a translucent blue cone fans out in the facing direction.
+ * The cone is rendered as an SVG for crisp rendering at any zoom level.
  */
 function createUserIcon(heading) {
   const hasHeading = heading !== null && heading !== undefined && Number.isFinite(heading);
 
-  const html = hasHeading
-    ? `<div class="user-location-dot user-location-dot--heading" style="transform: rotate(${heading}deg)">
-         <div class="user-heading-wedge"></div>
-       </div>`
-    : `<div class="user-location-dot"></div>`;
+  // Larger container to fit the cone without clipping
+  const size = hasHeading ? 60 : 22;
+  const half = size / 2;
 
+  if (hasHeading) {
+    // SVG cone: a pie-slice wedge + centered blue dot
+    const html = `
+      <div class="user-dot-container" style="width:${size}px;height:${size}px;position:relative;">
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="position:absolute;top:0;left:0;transform:rotate(${heading}deg);transform-origin:center center;">
+          <defs>
+            <radialGradient id="cone-grad" cx="50%" cy="100%" r="100%" fx="50%" fy="100%">
+              <stop offset="0%" stop-color="rgba(59,130,246,0.45)" />
+              <stop offset="100%" stop-color="rgba(59,130,246,0)" />
+            </radialGradient>
+          </defs>
+          <path d="M${half},${half} L${half - 14},4 Q${half},0 ${half + 14},4 Z" fill="url(#cone-grad)" />
+        </svg>
+        <div class="user-location-dot" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+      </div>`;
+
+    return new L.DivIcon({
+      className: '',
+      html,
+      iconSize: [size, size],
+      iconAnchor: [half, half],
+    });
+  }
+
+  // No heading — plain pulsing dot
+  const html = `<div class="user-location-dot"></div>`;
   return new L.DivIcon({
     className: '',
     html,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
   });
 }
+
 
 // Recenter map when user or destination changes
 function MapController({ userPosition, destination }) {
@@ -127,24 +153,10 @@ export default function MapView({ userPosition, destination, routeCoordinates })
 
       {/* User location */}
       {userPosition && (
-        <>
-          <Marker
-            position={[userPosition.lat, userPosition.lng]}
-            icon={userIcon}
-          />
-          {userPosition.accuracy && (
-            <Circle
-              center={[userPosition.lat, userPosition.lng]}
-              radius={userPosition.accuracy}
-              pathOptions={{
-                color: '#3b82f6',
-                fillColor: '#3b82f6',
-                fillOpacity: 0.08,
-                weight: 1,
-              }}
-            />
-          )}
-        </>
+        <Marker
+          position={[userPosition.lat, userPosition.lng]}
+          icon={userIcon}
+        />
       )}
 
       {/* Destination marker */}

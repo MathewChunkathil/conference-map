@@ -160,22 +160,66 @@
   animation: fadeUp 0.4s ease;
 }
 
-/* GPS error toast */
-.gps-toast {
+/* Location permission banner */
+.gps-permission-banner {
   position: absolute;
   top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #451a03;
-  border: 1px solid #92400e;
-  color: #fcd34d;
-  border-radius: 999px;
-  padding: 7px 16px;
-  font-size: 12px;
-  font-weight: 500;
+  left: 12px;
+  right: 12px;
   z-index: 600;
-  white-space: nowrap;
+  background: rgba(26,29,39,0.95);
+  border: 1px solid rgba(245,158,11,0.4);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   box-shadow: var(--shadow-card);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+}
+
+.gps-permission-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.gps-permission-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.gps-permission-text strong {
+  font-size: 13px;
+  color: var(--color-text-1);
+}
+
+.gps-permission-text span {
+  font-size: 11px;
+  color: var(--color-text-3);
+  line-height: 1.4;
+}
+
+.gps-permission-reload {
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-warning);
+  color: #1a1d27;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+  font-family: var(--font);
+}
+
+.gps-permission-reload:hover {
+  opacity: 0.85;
 }
 
 /* ─── User location dot (Leaflet DivIcon) ───────────── */
@@ -518,9 +562,114 @@
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  padding: 16px 20px 32px;
+  padding: 0 16px 20px;
   box-shadow: var(--shadow-float);
   animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.nav-panel--expanded {
+  max-height: 75dvh;
+  overflow-y: auto;
+}
+
+/* ── Compact summary bar ────────────────────────────── */
+.nav-compact-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 4px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-1);
+  cursor: pointer;
+  gap: 8px;
+  text-align: left;
+  font-family: var(--font);
+}
+
+.nav-compact-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.nav-compact-venue {
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-compact-sep {
+  color: var(--color-text-3);
+  font-size: 12px;
+}
+
+.nav-compact-building {
+  font-size: 12px;
+  color: var(--color-text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-compact-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  color: var(--color-text-2);
+}
+
+.nav-compact-dist {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.nav-compact-eta {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--color-text-3);
+  white-space: nowrap;
+}
+
+.nav-compact-no-gps {
+  font-size: 11px;
+  color: var(--color-text-3);
+}
+
+.nav-compact-bearing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.nav-compact-bearing-arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ── Progress bar (compact thin version) ─────────────── */
+.nav-progress-bar--compact {
+  height: 3px;
+  margin: 0 4px 10px;
+}
+
+/* ── Expanded content ────────────────────────────────── */
+.nav-expanded-content {
+  padding: 4px 4px 8px;
+  animation: fadeIn 0.2s ease;
 }
 
 @keyframes slideUp {
@@ -1300,24 +1449,11 @@
   padding: 6px 0;
 }
 
-/* ─── User heading wedge (flashlight effect) ────────── */
-.user-location-dot--heading {
-  position: relative;
-}
-
-.user-heading-wedge {
-  position: absolute;
-  bottom: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 28px solid rgba(59,130,246,0.35);
-  transform: translateX(-50%);
-  filter: blur(2px);
+/* ─── User heading cone (SVG-based, styles in MapView) ─ */
+.user-dot-container {
   pointer-events: none;
 }
+
 
 /* ─── Campus Info Modal ─────────────────────────────── */
 .campus-info-overlay {
