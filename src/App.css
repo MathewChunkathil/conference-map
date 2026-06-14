@@ -293,8 +293,7 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--color-text-2);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.4px;
   flex-shrink: 0;
 }
 
@@ -620,7 +619,7 @@
 
 /* Buttons */
 .btn-arrived {
-  width: 100%;
+  flex: 1;
   padding: 13px;
   border-radius: var(--radius-md);
   background: var(--color-success);
@@ -638,6 +637,52 @@
 .btn-arrived:hover  { opacity: 0.9; }
 .btn-arrived:active { transform: scale(0.98); }
 
+/* Nav actions row */
+.nav-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-share {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn-share:hover {
+  background: var(--color-primary-glow);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ETA badge */
+.nav-eta-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-2);
+  white-space: nowrap;
+}
+
+.nav-eta-badge svg {
+  color: var(--color-accent);
+}
+
 /* ─── Arrival overlay ───────────────────────────────── */
 .arrival-overlay {
   position: fixed;
@@ -651,6 +696,44 @@
   backdrop-filter: blur(8px);
   animation: fadeIn 0.2s ease;
 }
+
+/* Full-screen strip mode */
+.arrival-overlay--strip {
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.arrival-strip {
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+}
+
+.arrival-strip-header {
+  text-align: center;
+  padding: 24px 20px 16px;
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.arrival-strip-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.arrival-strip-scroll::-webkit-scrollbar { width: 4px; }
+.arrival-strip-scroll::-webkit-scrollbar-track { background: transparent; }
+.arrival-strip-scroll::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 
 .arrival-card {
   background: var(--color-surface);
@@ -703,7 +786,7 @@
   font-size: 16px;
   font-weight: 600;
   color: var(--color-primary);
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .arrival-details {
@@ -714,7 +797,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 20px;
   text-align: left;
 }
 
@@ -730,6 +812,127 @@
   color: var(--color-primary);
   flex-shrink: 0;
 }
+
+/* Indoor guide — vertical visual strip */
+.arrival-indoor-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.arrival-guide-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--color-text-3);
+}
+
+.arrival-guide-step {
+  display: flex;
+  gap: 12px;
+}
+
+.arrival-guide-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.arrival-guide-step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.arrival-guide-step-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-1);
+  margin-bottom: 8px;
+}
+
+.arrival-guide-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+
+.arrival-guide-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.arrival-guide-photo-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--color-text-3);
+  font-size: 12px;
+}
+
+.arrival-guide-instruction {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.arrival-guide-instruction p {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-1);
+  line-height: 1.5;
+}
+
+.arrival-guide-arrow {
+  color: var(--color-primary);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+/* SOS button */
+.arrival-sos-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-danger);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.2px;
+}
+
+.arrival-sos-btn:hover  { opacity: 0.9; }
+.arrival-sos-btn:active { transform: scale(0.98); }
 
 .btn-navigate-another {
   width: 100%;
@@ -751,6 +954,282 @@
   background: var(--color-primary-glow);
   border-color: var(--color-primary);
   color: var(--color-text-1);
+}
+
+/* ─── Onboarding overlay ───────────────────────────── */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.onboarding-card {
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.onboarding-icon-ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--color-primary-glow);
+  border: 2px solid var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.onboarding-icon {
+  color: var(--color-primary);
+}
+
+.onboarding-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-text-1);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.onboarding-subtitle {
+  font-size: 14px;
+  color: var(--color-text-2);
+  margin-bottom: 28px;
+}
+
+.onboarding-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.onboarding-input {
+  width: 100%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--color-text-1);
+  outline: none;
+  text-align: center;
+  transition: border-color 0.15s;
+}
+
+.onboarding-input::placeholder {
+  color: var(--color-text-3);
+}
+
+.onboarding-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.onboarding-btn {
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.onboarding-btn:hover  { opacity: 0.9; }
+.onboarding-btn:active { transform: scale(0.98); }
+.onboarding-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── User heading wedge (flashlight effect) ────────── */
+.user-location-dot--heading {
+  position: relative;
+}
+
+.user-heading-wedge {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 28px solid rgba(59,130,246,0.35);
+  transform: translateX(-50%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* ─── Campus Info Modal ─────────────────────────────── */
+.campus-info-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.2s ease;
+}
+
+.campus-info-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow-float);
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-height: 80dvh;
+  overflow-y: auto;
+}
+
+.campus-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.campus-info-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-1);
+}
+
+.campus-info-close {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.campus-info-close:hover {
+  background: var(--color-danger);
+  color: white;
+}
+
+.campus-info-section {
+  margin-bottom: 20px;
+}
+
+.campus-info-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.campus-info-section-header svg {
+  color: var(--color-primary);
+}
+
+.campus-info-detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 6px;
+}
+
+.campus-info-label {
+  font-size: 13px;
+  color: var(--color-text-3);
+}
+
+.campus-info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-1);
+}
+
+.campus-info-mono {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 0.5px;
+  background: var(--color-primary-glow);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.campus-info-contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 6px;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.campus-info-contact:hover {
+  background: rgba(16,185,129,0.1);
+  border-color: var(--color-success);
+}
+
+.campus-info-contact svg {
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.campus-info-contact-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-1);
+  margin-bottom: 2px;
+}
+
+.campus-info-contact-number {
+  font-size: 12px;
+  color: var(--color-text-3);
+}
+
+.campus-info-sos-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--color-text-2);
+  line-height: 1.6;
+}
+
+.campus-info-sos-tip svg {
+  color: var(--color-warning);
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
 /* ─── GPS error screen ──────────────────────────────── */
@@ -914,4 +1393,17 @@
   .map-prompt {
     bottom: 120px;
   }
+
+  .arrival-strip {
+    max-width: 480px;
+    margin: 0 auto;
+    border-radius: var(--radius-xl);
+    height: auto;
+    max-height: 90dvh;
+  }
+
+  .campus-info-card {
+    max-width: 440px;
+  }
 }
+

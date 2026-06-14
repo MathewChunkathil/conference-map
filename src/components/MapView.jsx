@@ -27,13 +27,26 @@ const destinationIcon = new L.DivIcon({
   popupAnchor: [0, -36],
 });
 
-// User location dot — pulsing blue circle
-const userIcon = new L.DivIcon({
-  className: '',
-  html: `<div class="user-location-dot"></div>`,
-  iconSize: [20, 20],
-  iconAnchor: [10, 10],
-});
+/**
+ * Build a user location DivIcon with heading rotation for the flashlight effect.
+ * When heading is available, a directional wedge is rendered; otherwise a plain dot.
+ */
+function createUserIcon(heading) {
+  const hasHeading = heading !== null && heading !== undefined && Number.isFinite(heading);
+
+  const html = hasHeading
+    ? `<div class="user-location-dot user-location-dot--heading" style="transform: rotate(${heading}deg)">
+         <div class="user-heading-wedge"></div>
+       </div>`
+    : `<div class="user-location-dot"></div>`;
+
+  return new L.DivIcon({
+    className: '',
+    html,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+  });
+}
 
 // Recenter map when user or destination changes
 function MapController({ userPosition, destination }) {
@@ -79,18 +92,23 @@ function MapController({ userPosition, destination }) {
   return null;
 }
 
-export default function MapView({ userPosition, destination }) {
+export default function MapView({ userPosition, destination, routeCoordinates }) {
   const defaultCenter = destination
     ? [destination.latitude, destination.longitude]
     : [9.5097, 76.5505]; // Campus approximate center
 
-  const polylinePositions =
-    userPosition && destination
+  // Use graph-based route coordinates if available, otherwise direct line
+  const polylinePositions = routeCoordinates
+    ? routeCoordinates
+    : userPosition && destination
       ? [
           [userPosition.lat, userPosition.lng],
           [destination.latitude, destination.longitude],
         ]
       : null;
+
+  // Build user icon with heading support for flashlight effect
+  const userIcon = createUserIcon(userPosition?.heading);
 
   return (
     <MapContainer
@@ -137,17 +155,33 @@ export default function MapView({ userPosition, destination }) {
         />
       )}
 
-      {/* Direction line */}
+      {/* Route polyline — thick styled path from routing engine */}
       {polylinePositions && (
-        <Polyline
-          positions={polylinePositions}
-          pathOptions={{
-            color: '#6366f1',
-            weight: 3,
-            opacity: 0.85,
-            dashArray: '8, 6',
-          }}
-        />
+        <>
+          {/* Glow outline */}
+          <Polyline
+            positions={polylinePositions}
+            pathOptions={{
+              color: '#6366f1',
+              weight: 8,
+              opacity: 0.25,
+              lineCap: 'round',
+              lineJoin: 'round',
+            }}
+          />
+          {/* Main route line */}
+          <Polyline
+            positions={polylinePositions}
+            pathOptions={{
+              color: '#818cf8',
+              weight: 4,
+              opacity: 0.9,
+              dashArray: '12, 8',
+              lineCap: 'round',
+              lineJoin: 'round',
+            }}
+          />
+        </>
       )}
 
       <MapController userPosition={userPosition} destination={destination} />

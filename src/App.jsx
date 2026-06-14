@@ -1,36 +1,121 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import MapView from './components/MapView';
 import VenueSelector from './components/VenueSelector';
 import NavigationPanel from './components/NavigationPanel';
 import ArrivalBanner from './components/ArrivalBanner';
+import CampusInfoModal from './components/CampusInfoModal';
 import { useGeolocation } from './hooks/useGeolocation';
 import { getDistanceMetres } from './utils/distance';
+import { computeRoute, getRemainingDistance } from './utils/routing';
 import venueData from './data/venues.json';
-import { MapPin, Menu, X, Compass } from 'lucide-react';
+import { MapPin, Menu, X, Compass, HelpCircle } from 'lucide-react';
 import './App.css';
 
-const ARRIVAL_THRESHOLD_METRES = 10;
+const ARRIVAL_THRESHOLD_METRES = 20;
 const venues = venueData.venues.filter((v) => v.active);
 
 export default function App() {
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [arrived, setArrived] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(true); // Open by default so users see the venue list
+  const [panelOpen, setPanelOpen] = useState(true);
+  const [showHelp, setShowHelp] = useState(false);
   const { position, error: gpsError, loading: gpsLoading } = useGeolocation();
   const arrivedRef = useRef(false);
 
-  // Distance between user and selected venue
-  const distance =
-    position && selectedVenue
-      ? getDistanceMetres(
-          position.lat,
-          position.lng,
-          selectedVenue.latitude,
-          selectedVenue.longitude
-        )
-      : null;
+  // ── Onboarding: delegate name ──────────────────────────
+  const [delegateName, setDelegateName] = useState(() =>
+    localStorage.getItem('delegateName') || ''
+  );
+  const [showOnboarding, setShowOnboarding] = useState(() =>
+    !localStorage.getItem('delegateName')
+  );
+  const [nameInput, setNameInput] = useState('');
 
-  // Auto-detect arrival
+  function handleSaveName(e) {
+    e.preventDefault();
+    const name = nameInput.trim();
+    if (!name) return;
+    localStorage.setItem('delegateName', name);
+    setDelegateName(name);
+    setShowOnboarding(false);
+  }
+
+  // ── Deep link parsing on mount ─────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    // ?target=S02 → auto-select that venue (takes priority over meetLat/meetLng)
+    const targetCode = params.get('target');
+    if (targetCode) {
+      const found = venues.find(
+        (v) => v.venueCode === targetCode || v.venueCode === targetCode.toUpperCase()
+      );
+      if (found) {
+        handleSelectVenue(found);
+        return; // Don't process meetLat/meetLng if target was found
+      }
+    }
+
+    // ?meetLat=X&meetLng=Y → create temporary meeting point
+    const meetLat = parseFloat(params.get('meetLat'));
+    const meetLng = parseFloat(params.get('meetLng'));
+    if (Number.isFinite(meetLat) && Number.isFinite(meetLng)) {
+      const meetingPoint = {
+        id: 'meet',
+        venueCode: 'MEET',
+        type: 'meeting',
+        name: 'Meeting Point',
+        building: 'Custom Location',
+        buildingCode: 'MT',
+        floor: 'Ground',
+        room: 'Shared Pin',
+        latitude: meetLat,
+        longitude: meetLng,
+        nearestNode: null, // will snap dynamically
+        description: '',
+        active: true,
+        metadata: {
+          entrancePhoto: '',
+          indoorInstructions: 'Head to the shared pin location.',
+          corridorPhoto: '',
+          coordinatorPhone: '',
+        },
+      };
+      handleSelectVenue(meetingPoint);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Compute graph-based route ──────────────────────────
+  const routeData = useMemo(() => {
+    if (!position || !selectedVenue) return null;
+
+    const destNode = selectedVenue.nearestNode;
+    if (!destNode) {
+      // For meeting points or venues without nearestNode, use direct line
+      return null;
+    }
+
+    return computeRoute(position.lat, position.lng, destNode);
+  }, [position, selectedVenue]);
+
+  // ── Distance: prefer graph-based, fallback to Haversine ──
+  const distance = useMemo(() => {
+    if (!position || !selectedVenue) return null;
+
+    // If we have a route with a path, use graph-based remaining distance
+    if (routeData?.path?.length > 0) {
+      return getRemainingDistance(position.lat, position.lng, routeData.path);
+    }
+
+    // Fallback: direct Haversine
+    return getDistanceMetres(
+      position.lat, position.lng,
+      selectedVenue.latitude, selectedVenue.longitude
+    );
+  }, [position, selectedVenue, routeData]);
+
+  // ── Auto-detect arrival ────────────────────────────────
   useEffect(() => {
     if (
       distance !== null &&
@@ -47,19 +132,54 @@ export default function App() {
     setSelectedVenue(venue);
     setArrived(false);
     arrivedRef.current = false;
-    setPanelOpen(false); // Close drawer on mobile after selection
+    setPanelOpen(false);
   }
 
   function handleDismissArrival() {
     setArrived(false);
     arrivedRef.current = false;
     setSelectedVenue(null);
-    setPanelOpen(true); // Re-open venue selector
+    setPanelOpen(true);
   }
 
   function handleManualArrive() {
     arrivedRef.current = true;
     setArrived(true);
+  }
+
+  // ── Onboarding screen ─────────────────────────────────
+  if (showOnboarding) {
+    return (
+      <div className="onboarding-overlay">
+        <div className="onboarding-card">
+          <div className="onboarding-icon-ring">
+            <Compass size={40} className="onboarding-icon" />
+          </div>
+          <h1 className="onboarding-title">Welcome to Campus Nav</h1>
+          <p className="onboarding-subtitle">
+            Your personal guide to the conference campus.
+          </p>
+          <form onSubmit={handleSaveName} className="onboarding-form">
+            <input
+              className="onboarding-input"
+              type="text"
+              placeholder="Enter your name…"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              autoFocus
+              aria-label="Your name"
+            />
+            <button
+              className="onboarding-btn"
+              type="submit"
+              disabled={!nameInput.trim()}
+            >
+              Get Started
+            </button>
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -87,6 +207,14 @@ export default function App() {
 
           <button
             className="btn-menu"
+            onClick={() => setShowHelp(true)}
+            aria-label="Campus info and help"
+          >
+            <HelpCircle size={20} />
+          </button>
+
+          <button
+            className="btn-menu"
             onClick={() => setPanelOpen((o) => !o)}
             aria-label={panelOpen ? 'Close venue list' : 'Open venue list'}
           >
@@ -97,10 +225,10 @@ export default function App() {
 
       {/* Map — always visible */}
       <main className="map-wrapper">
-        {/* Map always renders; GPS state shown as overlay */}
         <MapView
           userPosition={position}
           destination={selectedVenue}
+          routeCoordinates={routeData?.coordinates || null}
         />
 
         {/* GPS acquiring overlay — non-blocking, just a small chip */}
@@ -132,7 +260,9 @@ export default function App() {
         <NavigationPanel
           venue={selectedVenue}
           distance={distance}
+          routeData={routeData}
           hasGps={!!position && !gpsError}
+          userPosition={position}
           onManualArrive={handleManualArrive}
         />
       )}
@@ -149,6 +279,7 @@ export default function App() {
           venues={venues}
           selectedVenue={selectedVenue}
           onSelect={handleSelectVenue}
+          delegateName={delegateName}
         />
       </div>
 
@@ -163,6 +294,11 @@ export default function App() {
       {/* Arrival overlay */}
       {arrived && selectedVenue && (
         <ArrivalBanner venue={selectedVenue} onDismiss={handleDismissArrival} />
+      )}
+
+      {/* Campus Info / Help modal */}
+      {showHelp && (
+        <CampusInfoModal onClose={() => setShowHelp(false)} />
       )}
     </div>
   );

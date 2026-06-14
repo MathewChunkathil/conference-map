@@ -9,13 +9,15 @@ const BUILDING_COLORS = {
   NB: { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
   VB: { bg: '#fce7f3', text: '#9d174d', border: '#f9a8d4' },
   RB: { bg: '#fff7ed', text: '#9a3412', border: '#fdba74' },
+  MG: { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  MT: { bg: '#ccfbf1', text: '#115e59', border: '#5eead4' },
 };
 
 function getBuildingStyle(code) {
   return BUILDING_COLORS[code] || { bg: '#f3f4f6', text: '#374151', border: '#d1d5db' };
 }
 
-export default function VenueSelector({ venues, selectedVenue, onSelect }) {
+export default function VenueSelector({ venues, selectedVenue, onSelect, delegateName }) {
   const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
@@ -34,7 +36,7 @@ export default function VenueSelector({ venues, selectedVenue, onSelect }) {
     <div className="venue-selector">
       <div className="venue-selector-header">
         <MapPin size={18} className="header-icon" />
-        <span>Select Your Destination</span>
+        <span>{delegateName ? `Hi, ${delegateName} 👋` : 'Select Your Destination'}</span>
       </div>
 
       {/* Search bar */}

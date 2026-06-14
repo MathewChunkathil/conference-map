@@ -1,10 +1,11 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "eventName": "Conference Navigation System",
   "venues": [
     {
       "id": 1,
       "venueCode": "S01",
+      "type": "stage",
       "name": "Stage 1",
       "building": "Mini Auditorium",
       "buildingCode": "MA",
@@ -12,12 +13,20 @@
       "room": "Main Hall",
       "latitude": 9.50956322008517,
       "longitude": 76.55018302223051,
+      "nearestNode": "B_MA",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/ma-main.jpg",
+        "indoorInstructions": "Enter main doors.",
+        "corridorPhoto": "",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 2,
       "venueCode": "S02",
+      "type": "stage",
       "name": "Stage 2",
       "building": "Admin Block",
       "buildingCode": "AB",
@@ -25,12 +34,20 @@
       "room": "AB20X",
       "latitude": 9.50987349428246,
       "longitude": 76.5507793540767,
+      "nearestNode": "B_AB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/ab-main.jpg",
+        "indoorInstructions": "Take main stairs to Floor 2.",
+        "corridorPhoto": "/assets/corridors/ab-2.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 3,
       "venueCode": "S03",
+      "type": "stage",
       "name": "Stage 3",
       "building": "South Block",
       "buildingCode": "SB",
@@ -38,25 +55,41 @@
       "room": "SB201",
       "latitude": 9.509374473409801,
       "longitude": 76.55087304059582,
+      "nearestNode": "B_SB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/sb-main.jpg",
+        "indoorInstructions": "Take stairs to Floor 1.",
+        "corridorPhoto": "/assets/corridors/sb-1.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 4,
       "venueCode": "S04",
+      "type": "stage",
       "name": "Stage 4",
       "building": "North Block",
       "buildingCode": "NB",
       "floor": "Ground",
-      "room": "NB106",
+      "room": "TC1 (NB106)",
       "latitude": 9.510428518223684,
       "longitude": 76.55101861496703,
+      "nearestNode": "B_NB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/nb-main.jpg",
+        "indoorInstructions": "Proceed down ground floor corridor.",
+        "corridorPhoto": "/assets/corridors/nb-g.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 5,
       "venueCode": "S05",
+      "type": "stage",
       "name": "Stage 5",
       "building": "Visvesvaraya Block",
       "buildingCode": "VB",
@@ -64,25 +97,41 @@
       "room": "VB304",
       "latitude": 9.509352681151002,
       "longitude": 76.55071700646165,
+      "nearestNode": "B_VB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/vb-main.jpg",
+        "indoorInstructions": "Take stairs to Second Floor.",
+        "corridorPhoto": "/assets/corridors/vb-2.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 6,
       "venueCode": "S06",
+      "type": "stage",
       "name": "Stage 6",
       "building": "North Block",
       "buildingCode": "NB",
       "floor": "Ground",
-      "room": "NB114",
+      "room": "TC1 (NB114)",
       "latitude": 9.510428518223684,
       "longitude": 76.55109861496703,
+      "nearestNode": "B_NB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/nb-main.jpg",
+        "indoorInstructions": "Proceed down ground floor corridor.",
+        "corridorPhoto": "/assets/corridors/nb-g.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 7,
       "venueCode": "S07",
+      "type": "stage",
       "name": "Stage 7",
       "building": "South Block",
       "buildingCode": "SB",
@@ -90,12 +139,20 @@
       "room": "SB205",
       "latitude": 9.509447473409801,
       "longitude": 76.55087304059582,
+      "nearestNode": "B_SB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/sb-main.jpg",
+        "indoorInstructions": "Take stairs to Floor 1.",
+        "corridorPhoto": "/assets/corridors/sb-1.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 8,
       "venueCode": "S08",
+      "type": "stage",
       "name": "Stage 8",
       "building": "South Block",
       "buildingCode": "SB",
@@ -103,12 +160,20 @@
       "room": "SB303",
       "latitude": 9.509447473409801,
       "longitude": 76.55095304059582,
+      "nearestNode": "B_SB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/sb-main.jpg",
+        "indoorInstructions": "Take stairs to Floor 2.",
+        "corridorPhoto": "/assets/corridors/sb-2.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     },
     {
       "id": 9,
       "venueCode": "S09",
+      "type": "stage",
       "name": "Stage 9",
       "building": "Ramanujan Block",
       "buildingCode": "RB",
@@ -116,8 +181,36 @@
       "room": "RB203",
       "latitude": 9.510222191281922,
       "longitude": 76.55040316744015,
+      "nearestNode": "B_RB",
       "description": "",
-      "active": true
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/rb-main.jpg",
+        "indoorInstructions": "Take stairs to Floor 2.",
+        "corridorPhoto": "/assets/corridors/rb-2.jpg",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
+    },
+    {
+      "id": 10,
+      "venueCode": "L01",
+      "type": "logistics",
+      "name": "Registration & Check-in",
+      "building": "Main Gate",
+      "buildingCode": "MG",
+      "floor": "Ground",
+      "room": "Registration Desk",
+      "latitude": 9.510000,
+      "longitude": 76.551000,
+      "nearestNode": "J1",
+      "description": "",
+      "active": true,
+      "metadata": {
+        "entrancePhoto": "/assets/entrances/gate.jpg",
+        "indoorInstructions": "Present QR code at desk.",
+        "corridorPhoto": "",
+        "coordinatorPhone": "+91XXXXXXXXXX"
+      }
     }
   ]
 }

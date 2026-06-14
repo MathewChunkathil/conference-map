@@ -1,0 +1,22 @@
+{
+  "nodes": {
+    "B_MA": { "lat": 9.50956322008517, "lng": 76.55018302223051, "label": "Mini Auditorium Entrance" },
+    "B_AB": { "lat": 9.50987, "lng": 76.55077, "label": "Admin Block Entrance" },
+    "B_SB": { "lat": 9.509374473409801, "lng": 76.55087304059582, "label": "South Block Entrance" },
+    "B_NB": { "lat": 9.510428518223684, "lng": 76.55101861496703, "label": "North Block Entrance" },
+    "B_VB": { "lat": 9.509352681151002, "lng": 76.55071700646165, "label": "Visvesvaraya Entrance" },
+    "B_RB": { "lat": 9.510222191281922, "lng": 76.55040316744015, "label": "Ramanujan Entrance" },
+    "J1":   { "lat": 9.51000, "lng": 76.55100, "label": "Main Gate Junction" },
+    "J2":   { "lat": 9.50990, "lng": 76.55080, "label": "Central Path" }
+  },
+  "edges": {
+    "J1":   { "J2": 50, "B_NB": 25 },
+    "J2":   { "J1": 50, "B_AB": 15, "B_NB": 30, "B_SB": 20, "B_VB": 18, "B_MA": 70, "B_RB": 55 },
+    "B_MA": { "J2": 70 },
+    "B_AB": { "J2": 15 },
+    "B_SB": { "J2": 20 },
+    "B_NB": { "J1": 25, "J2": 30 },
+    "B_VB": { "J2": 18 },
+    "B_RB": { "J2": 55 }
+  }
+}
