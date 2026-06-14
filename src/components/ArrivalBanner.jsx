@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { formatFloor } from '../utils/distance';
 
-export default function ArrivalBanner({ venue, onDismiss }) {
+export default function ArrivalBanner({ venue, onDismiss, delegateGender, buildingFacilities }) {
   // Close on Escape key press — prevents keyboard trap
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Escape') {
@@ -23,6 +23,14 @@ export default function ArrivalBanner({ venue, onDismiss }) {
   const hasCorridorPhoto = meta.corridorPhoto && meta.corridorPhoto.trim();
   const hasInstructions = meta.indoorInstructions && meta.indoorInstructions.trim();
   const hasPhone = meta.coordinatorPhone && meta.coordinatorPhone.trim();
+
+  // Building facilities lookup
+  const facilities = buildingFacilities?.[venue.buildingCode] || null;
+  const floorKey = venue.floor === 'Ground' ? 'Ground' : venue.floor;
+  const washroomData = facilities?.washrooms?.[floorKey] || facilities?.washrooms?.['Ground'] || null;
+  const washroomDir = washroomData
+    ? (delegateGender === 'female' ? washroomData.female : washroomData.male)
+    : null;
 
   return (
     <div
@@ -58,6 +66,24 @@ export default function ArrivalBanner({ venue, onDismiss }) {
               <DoorOpen size={16} />
               <span>Room {venue.room}</span>
             </div>
+            {washroomDir && (
+              <div className="arrival-detail-row">
+                <span style={{ fontSize: 16, lineHeight: 1 }}>🚻</span>
+                <span>Washroom: {washroomDir}</span>
+              </div>
+            )}
+            {facilities?.water && (
+              <div className="arrival-detail-row">
+                <span style={{ fontSize: 16, lineHeight: 1 }}>💧</span>
+                <span>{facilities.water}</span>
+              </div>
+            )}
+            {facilities?.food && (
+              <div className="arrival-detail-row">
+                <span style={{ fontSize: 16, lineHeight: 1 }}>🍽️</span>
+                <span>{facilities.food}</span>
+              </div>
+            )}
           </div>
 
           {/* ── Vertical Visual Strip — Indoor Handoff ── */}

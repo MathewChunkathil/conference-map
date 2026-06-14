@@ -1051,6 +1051,215 @@
   cursor: not-allowed;
 }
 
+.onboarding-btn--back {
+  background: var(--color-surface-2);
+  color: var(--color-text-2);
+  border: 1px solid var(--color-border);
+}
+.onboarding-btn--back:hover { opacity: 0.8; }
+
+.onboarding-btns-row {
+  display: flex;
+  gap: 10px;
+}
+
+.onboarding-btns-row .onboarding-btn {
+  flex: 1;
+}
+
+/* Step indicator dots */
+.onboarding-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.onboarding-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background 0.25s, transform 0.25s;
+}
+
+.onboarding-dot--active {
+  background: var(--color-primary);
+  transform: scale(1.25);
+}
+
+.onboarding-dot--done {
+  background: var(--color-success);
+}
+
+/* Field labels */
+.onboarding-field {
+  text-align: left;
+}
+
+.onboarding-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-2);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.onboarding-hint {
+  font-size: 12px;
+  color: var(--color-text-3);
+  margin: -4px 0 12px;
+}
+
+/* Title pill row */
+.onboarding-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.onboarding-pill {
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+
+.onboarding-pill:hover {
+  border-color: var(--color-primary);
+  color: var(--color-text-1);
+}
+
+.onboarding-pill--active {
+  background: var(--color-primary-glow);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Gender selector */
+.onboarding-gender-row {
+  display: flex;
+  gap: 12px;
+}
+
+.onboarding-gender-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-2);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font);
+}
+
+.onboarding-gender-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.onboarding-gender-btn--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-glow);
+  color: var(--color-primary);
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.gender-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+/* ─── Edit profile button ─────────────────────────────── */
+.edit-profile-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.edit-profile-btn:hover {
+  background: var(--color-primary-glow);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ─── Facility chips (washroom, water, food) ──────────── */
+.facility-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+}
+
+.facility-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+  color: var(--color-text-2);
+}
+
+.facility-chip-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+}
+
+.facility-chip-label {
+  font-weight: 600;
+  color: var(--color-text-1);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+.facility-chip-value {
+  color: var(--color-text-2);
+}
+
+/* Arrival detail washroom row */
+.arrival-facility-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-2);
+  padding: 6px 0;
+}
+
 /* ─── User heading wedge (flashlight effect) ────────── */
 .user-location-dot--heading {
   position: relative;

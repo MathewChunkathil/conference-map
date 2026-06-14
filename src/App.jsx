@@ -11,6 +11,8 @@ import venueData from './data/venues.json';
 import { MapPin, Menu, X, Compass, HelpCircle } from 'lucide-react';
 import './App.css';
 
+const TITLE_OPTIONS = ['Dr.', 'Prof.', 'Er.', 'Mr.', 'Ms.', 'Mrs.'];
+
 const ARRIVAL_THRESHOLD_METRES = 20;
 const venues = venueData.venues.filter((v) => v.active);
 
@@ -22,22 +24,51 @@ export default function App() {
   const { position, error: gpsError, loading: gpsLoading } = useGeolocation();
   const arrivedRef = useRef(false);
 
-  // ── Onboarding: delegate name ──────────────────────────
+  // ── Onboarding: delegate profile ───────────────────────
+  const [delegateTitle, setDelegateTitle] = useState(() =>
+    localStorage.getItem('delegateTitle') || ''
+  );
   const [delegateName, setDelegateName] = useState(() =>
     localStorage.getItem('delegateName') || ''
+  );
+  const [delegateGender, setDelegateGender] = useState(() =>
+    localStorage.getItem('delegateGender') || ''
   );
   const [showOnboarding, setShowOnboarding] = useState(() =>
     !localStorage.getItem('delegateName')
   );
+  const [onboardingStep, setOnboardingStep] = useState(1);
+  const [titleInput, setTitleInput] = useState('');
   const [nameInput, setNameInput] = useState('');
+  const [genderInput, setGenderInput] = useState('');
 
-  function handleSaveName(e) {
+  function handleStep1Next(e) {
     e.preventDefault();
     const name = nameInput.trim();
-    if (!name) return;
+    if (!name || !titleInput) return;
+    setOnboardingStep(2);
+  }
+
+  function handleSaveProfile(e) {
+    e.preventDefault();
+    if (!genderInput) return;
+    const name = nameInput.trim();
+    localStorage.setItem('delegateTitle', titleInput);
     localStorage.setItem('delegateName', name);
+    localStorage.setItem('delegateGender', genderInput);
+    setDelegateTitle(titleInput);
     setDelegateName(name);
+    setDelegateGender(genderInput);
     setShowOnboarding(false);
+    setOnboardingStep(1);
+  }
+
+  function handleEditProfile() {
+    setTitleInput(delegateTitle);
+    setNameInput(delegateName);
+    setGenderInput(delegateGender);
+    setOnboardingStep(1);
+    setShowOnboarding(true);
   }
 
   // ── Deep link parsing on mount ─────────────────────────
@@ -147,7 +178,7 @@ export default function App() {
     setArrived(true);
   }
 
-  // ── Onboarding screen ─────────────────────────────────
+  // ── Onboarding screen (2-step) ─────────────────────────
   if (showOnboarding) {
     return (
       <div className="onboarding-overlay">
@@ -159,24 +190,93 @@ export default function App() {
           <p className="onboarding-subtitle">
             Your personal guide to the conference campus.
           </p>
-          <form onSubmit={handleSaveName} className="onboarding-form">
-            <input
-              className="onboarding-input"
-              type="text"
-              placeholder="Enter your name…"
-              value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
-              autoFocus
-              aria-label="Your name"
-            />
-            <button
-              className="onboarding-btn"
-              type="submit"
-              disabled={!nameInput.trim()}
-            >
-              Get Started
-            </button>
-          </form>
+
+          {/* Step dots */}
+          <div className="onboarding-dots">
+            <div className={`onboarding-dot ${onboardingStep === 1 ? 'onboarding-dot--active' : 'onboarding-dot--done'}`} />
+            <div className={`onboarding-dot ${onboardingStep === 2 ? 'onboarding-dot--active' : ''}`} />
+          </div>
+
+          {onboardingStep === 1 ? (
+            <form onSubmit={handleStep1Next} className="onboarding-form">
+              <div className="onboarding-field">
+                <label className="onboarding-label" htmlFor="ob-title">Title</label>
+                <div className="onboarding-pill-row">
+                  {TITLE_OPTIONS.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      className={`onboarding-pill ${titleInput === t ? 'onboarding-pill--active' : ''}`}
+                      onClick={() => setTitleInput(t)}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="onboarding-field">
+                <label className="onboarding-label" htmlFor="ob-name">Full Name</label>
+                <input
+                  id="ob-name"
+                  className="onboarding-input"
+                  type="text"
+                  placeholder="Enter your name…"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  autoFocus
+                  aria-label="Your name"
+                />
+              </div>
+              <button
+                className="onboarding-btn"
+                type="submit"
+                disabled={!nameInput.trim() || !titleInput}
+              >
+                Next →
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleSaveProfile} className="onboarding-form">
+              <div className="onboarding-field">
+                <label className="onboarding-label">Gender</label>
+                <p className="onboarding-hint">This helps us show you the nearest washroom.</p>
+                <div className="onboarding-gender-row">
+                  <button
+                    type="button"
+                    className={`onboarding-gender-btn ${genderInput === 'male' ? 'onboarding-gender-btn--active' : ''}`}
+                    onClick={() => setGenderInput('male')}
+                  >
+                    <span className="gender-icon">👨</span>
+                    <span>Male</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`onboarding-gender-btn ${genderInput === 'female' ? 'onboarding-gender-btn--active' : ''}`}
+                    onClick={() => setGenderInput('female')}
+                  >
+                    <span className="gender-icon">👩</span>
+                    <span>Female</span>
+                  </button>
+                </div>
+              </div>
+              <div className="onboarding-btns-row">
+                <button
+                  type="button"
+                  className="onboarding-btn onboarding-btn--back"
+                  onClick={() => setOnboardingStep(1)}
+                >
+                  ← Back
+                </button>
+                <button
+                  className="onboarding-btn"
+                  type="submit"
+                  disabled={!genderInput}
+                >
+                  Get Started
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     );
@@ -264,6 +364,8 @@ export default function App() {
           hasGps={!!position && !gpsError}
           userPosition={position}
           onManualArrive={handleManualArrive}
+          delegateGender={delegateGender}
+          buildingFacilities={venueData.buildingFacilities}
         />
       )}
 
@@ -279,7 +381,9 @@ export default function App() {
           venues={venues}
           selectedVenue={selectedVenue}
           onSelect={handleSelectVenue}
+          delegateTitle={delegateTitle}
           delegateName={delegateName}
+          onEditProfile={handleEditProfile}
         />
       </div>
 
@@ -293,7 +397,12 @@ export default function App() {
 
       {/* Arrival overlay */}
       {arrived && selectedVenue && (
-        <ArrivalBanner venue={selectedVenue} onDismiss={handleDismissArrival} />
+        <ArrivalBanner
+          venue={selectedVenue}
+          onDismiss={handleDismissArrival}
+          delegateGender={delegateGender}
+          buildingFacilities={venueData.buildingFacilities}
+        />
       )}
 
       {/* Campus Info / Help modal */}

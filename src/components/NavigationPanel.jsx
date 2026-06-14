@@ -2,7 +2,7 @@ import { Building2, Layers, DoorOpen, Navigation, Locate, ArrowUpRight, Share2, 
 import { formatDistance, formatFloor } from '../utils/distance';
 import { getWalkingTime } from '../utils/routing';
 
-export default function NavigationPanel({ venue, distance, routeData, hasGps, userPosition, onManualArrive }) {
+export default function NavigationPanel({ venue, distance, routeData, hasGps, userPosition, onManualArrive, delegateGender, buildingFacilities }) {
   const distanceLabel = distance !== null ? formatDistance(distance) : null;
   const floorLabel = formatFloor(venue.floor);
   const walkingTime = distance !== null ? getWalkingTime(distance) : '--';
@@ -20,6 +20,14 @@ export default function NavigationPanel({ venue, distance, routeData, hasGps, us
     : distance < 30  ? 'var(--color-success)'
     : distance < 100 ? 'var(--color-warning)'
     : 'var(--color-text-1)';
+
+  // ── Building facilities lookup ─────────────────────────
+  const facilities = buildingFacilities?.[venue.buildingCode] || null;
+  const floorKey = venue.floor === 'Ground' ? 'Ground' : venue.floor;
+  const washroomData = facilities?.washrooms?.[floorKey] || facilities?.washrooms?.['Ground'] || null;
+  const washroomDir = washroomData
+    ? (delegateGender === 'female' ? washroomData.female : washroomData.male)
+    : null;
 
   // ── Web Share API ──────────────────────────────────────
   async function handleShare() {
@@ -112,6 +120,33 @@ export default function NavigationPanel({ venue, distance, routeData, hasGps, us
           <div className="guidance-value">{venue.room}</div>
         </div>
       </div>
+
+      {/* Facility chips */}
+      {facilities && (
+        <div className="facility-chips">
+          {washroomDir && (
+            <div className="facility-chip">
+              <span className="facility-chip-icon">🚻</span>
+              <span className="facility-chip-label">Washroom:</span>
+              <span className="facility-chip-value">{washroomDir}</span>
+            </div>
+          )}
+          {facilities.water && (
+            <div className="facility-chip">
+              <span className="facility-chip-icon">💧</span>
+              <span className="facility-chip-label">Water:</span>
+              <span className="facility-chip-value">{facilities.water}</span>
+            </div>
+          )}
+          {facilities.food && (
+            <div className="facility-chip">
+              <span className="facility-chip-icon">🍽️</span>
+              <span className="facility-chip-label">Food:</span>
+              <span className="facility-chip-value">{facilities.food}</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Action buttons */}
       <div className="nav-actions-row">

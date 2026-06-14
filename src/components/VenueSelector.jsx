@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { MapPin, Building2, ChevronRight, Search, X } from 'lucide-react';
+import { MapPin, Building2, ChevronRight, Search, X, Pencil } from 'lucide-react';
 
 // Building colour tags — visually distinguish same-building venues
 const BUILDING_COLORS = {
@@ -17,7 +17,7 @@ function getBuildingStyle(code) {
   return BUILDING_COLORS[code] || { bg: '#f3f4f6', text: '#374151', border: '#d1d5db' };
 }
 
-export default function VenueSelector({ venues, selectedVenue, onSelect, delegateName }) {
+export default function VenueSelector({ venues, selectedVenue, onSelect, delegateTitle, delegateName, onEditProfile }) {
   const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
@@ -36,7 +36,21 @@ export default function VenueSelector({ venues, selectedVenue, onSelect, delegat
     <div className="venue-selector">
       <div className="venue-selector-header">
         <MapPin size={18} className="header-icon" />
-        <span>{delegateName ? `Hi, ${delegateName} 👋` : 'Select Your Destination'}</span>
+        <span>
+          {delegateName
+            ? `Welcome, ${delegateTitle ? delegateTitle + ' ' : ''}${delegateName}`
+            : 'Select Your Destination'}
+        </span>
+        {delegateName && onEditProfile && (
+          <button
+            className="edit-profile-btn"
+            onClick={onEditProfile}
+            aria-label="Edit profile"
+            title="Edit profile"
+          >
+            <Pencil size={13} />
+          </button>
+        )}
       </div>
 
       {/* Search bar */}
