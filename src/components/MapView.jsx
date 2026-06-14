@@ -39,8 +39,22 @@ const userIcon = new L.DivIcon({
 function MapController({ userPosition, destination }) {
   const map = useMap();
   const initialFitDone = useRef(false);
+  const hadUserPosition = useRef(false);
 
   useEffect(() => {
+    // Track if user position was ever null when we did the initial fit
+    const userJustAcquired = userPosition && !hadUserPosition.current;
+
+    if (userPosition) {
+      hadUserPosition.current = true;
+    }
+
+    // If user position just became available and we already did a destination-only fit,
+    // reset so we can re-fit with both points
+    if (userJustAcquired && initialFitDone.current && destination) {
+      initialFitDone.current = false;
+    }
+
     if (!initialFitDone.current) {
       if (userPosition && destination) {
         const bounds = L.latLngBounds(
@@ -59,6 +73,7 @@ function MapController({ userPosition, destination }) {
   // Reset when destination changes so it recenters
   useEffect(() => {
     initialFitDone.current = false;
+    hadUserPosition.current = !!userPosition;
   }, [destination?.id]);
 
   return null;

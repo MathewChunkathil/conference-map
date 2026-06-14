@@ -1,9 +1,27 @@
+import { useEffect, useCallback } from 'react';
 import { CheckCircle2, Building2, Layers, DoorOpen, RotateCcw } from 'lucide-react';
 import { formatFloor } from '../utils/distance';
 
 export default function ArrivalBanner({ venue, onDismiss }) {
+  // Close on Escape key press — prevents keyboard trap
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape') {
+      onDismiss();
+    }
+  }, [onDismiss]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
   return (
-    <div className="arrival-overlay">
+    <div
+      className="arrival-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Arrival confirmation"
+    >
       <div className="arrival-card">
         <div className="arrival-icon-ring">
           <CheckCircle2 size={44} className="arrival-check" />

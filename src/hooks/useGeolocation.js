@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 const GEOLOCATION_OPTIONS = {
   enableHighAccuracy: true,
   timeout: 10000,
-  maximumAge: 0,
+  maximumAge: 3000, // Allow 3s cached position to reduce battery drain
 };
 
 export function useGeolocation() {

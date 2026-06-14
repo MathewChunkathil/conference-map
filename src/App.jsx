@@ -139,7 +139,12 @@ export default function App() {
 
       {/* Venue Selector Drawer */}
       <div className={`venue-drawer ${panelOpen ? 'venue-drawer--open' : ''}`}>
-        <div className="venue-drawer-handle" onClick={() => setPanelOpen(false)} />
+        <button
+          className="venue-drawer-handle"
+          onClick={() => setPanelOpen(false)}
+          aria-label="Collapse venue drawer"
+          aria-expanded={panelOpen}
+        />
         <VenueSelector
           venues={venues}
           selectedVenue={selectedVenue}

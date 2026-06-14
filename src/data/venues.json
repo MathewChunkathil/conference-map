@@ -76,7 +76,7 @@
       "floor": "Ground",
       "room": "NB114",
       "latitude": 9.510428518223684,
-      "longitude": 76.55101861496703,
+      "longitude": 76.55109861496703,
       "description": "",
       "active": true
     },
@@ -88,7 +88,7 @@
       "buildingCode": "SB",
       "floor": "1",
       "room": "SB205",
-      "latitude": 9.509374473409801,
+      "latitude": 9.509447473409801,
       "longitude": 76.55087304059582,
       "description": "",
       "active": true
@@ -101,8 +101,8 @@
       "buildingCode": "SB",
       "floor": "2",
       "room": "SB303",
-      "latitude": 9.509374473409801,
-      "longitude": 76.55087304059582,
+      "latitude": 9.509447473409801,
+      "longitude": 76.55095304059582,
       "description": "",
       "active": true
     },
