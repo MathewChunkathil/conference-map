@@ -38,7 +38,7 @@ export default function VenueSelector({ venues, selectedVenue, onSelect, delegat
         <MapPin size={18} className="header-icon" />
         <span>
           {delegateName
-            ? `Welcome, ${delegateTitle ? delegateTitle + ' ' : ''}${delegateName}`
+            ? `Welcome, ${delegateTitle ? delegateTitle + ' ' : ''}${delegateName.split(' ')[0]}`
             : 'Select Your Destination'}
         </span>
         {delegateName && onEditProfile && (

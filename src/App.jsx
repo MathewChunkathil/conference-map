@@ -239,7 +239,6 @@ export default function App() {
             <form onSubmit={handleSaveProfile} className="onboarding-form">
               <div className="onboarding-field">
                 <label className="onboarding-label">Gender</label>
-                <p className="onboarding-hint">This helps us show you the nearest washroom.</p>
                 <div className="onboarding-gender-row">
                   <button
                     type="button"
