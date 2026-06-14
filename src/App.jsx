@@ -383,6 +383,8 @@ export default function App() {
           delegateTitle={delegateTitle}
           delegateName={delegateName}
           onEditProfile={handleEditProfile}
+          buildingFacilities={venueData.buildingFacilities}
+          delegateGender={delegateGender}
         />
       </div>
 

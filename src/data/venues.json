@@ -6,9 +6,7 @@
       "name": "Mini Auditorium",
       "washrooms": {
         "Ground": { "male": "Right side of lobby", "female": "Left side of lobby" }
-      },
-      "water": "Drinking water station near entrance",
-      "food": "Refreshments counter in foyer"
+      }
     },
     "AB": {
       "name": "Admin Block",
@@ -27,16 +25,13 @@
         "1": { "male": "Near staircase", "female": "Far end of corridor" },
         "2": { "male": "Near staircase", "female": "Far end of corridor" }
       },
-      "water": "Water coolers near staircase, each floor",
-      "food": "Vending area on Ground Floor"
+      "water": "Water coolers near staircase, each floor"
     },
     "NB": {
       "name": "North Block",
       "washrooms": {
         "Ground": { "male": "Right corridor", "female": "Left corridor" }
-      },
-      "water": "Drinking water near entrance",
-      "food": "Refreshments stall outside building"
+      }
     },
     "VB": {
       "name": "Visvesvaraya Block",
@@ -45,8 +40,7 @@
         "1": { "male": "East end", "female": "West end" },
         "2": { "male": "East end", "female": "West end" }
       },
-      "water": "Water coolers on each floor",
-      "food": "No food facility — nearest: Admin Block canteen"
+      "water": "Water coolers on each floor"
     },
     "RB": {
       "name": "Ramanujan Block",
@@ -54,17 +48,13 @@
         "Ground": { "male": "East side of lobby", "female": "West side of lobby" },
         "1": { "male": "East corridor", "female": "West corridor" },
         "2": { "male": "East corridor", "female": "West corridor" }
-      },
-      "water": "Water cooler near Ground Floor entrance",
-      "food": "No food facility — nearest: Admin Block canteen"
+      }
     },
     "MG": {
       "name": "Main Gate",
       "washrooms": {
         "Ground": { "male": "Portable units, right of gate", "female": "Portable units, left of gate" }
-      },
-      "water": "Water bottles at registration desk",
-      "food": "Refreshments at registration counter"
+      }
     }
   },
   "venues": [

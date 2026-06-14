@@ -384,6 +384,46 @@
 .venue-list::-webkit-scrollbar-track { background: transparent; }
 .venue-list::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 
+/* ─── Section headers (Venues / Amenities) ─────────── */
+.venue-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 4px 4px;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-3);
+}
+.venue-section-header--amenities {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border-soft);
+}
+
+/* ─── Amenity cards ────────────────────────────────── */
+.amenity-card {
+  cursor: default;
+  padding: 10px 14px;
+}
+.amenity-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.amenity-detail {
+  font-size: 11px;
+  color: var(--color-text-3);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
 .venue-card {
   display: flex;
   align-items: center;
