@@ -6,7 +6,7 @@ Built with **React 19 + Vite 8 + Leaflet**. Designed as a pure static single-pag
 
 ---
 
-## ✨ Features (Version 1.1)
+## ✨ Features (Version 1.2)
 
 ### 📍 Live Map & GPS Navigation
 - **CartoDB Dark Matter Tiles:** A high-contrast, premium dark-mode interface optimized for outdoor and indoor visibility.
@@ -18,8 +18,16 @@ Built with **React 19 + Vite 8 + Leaflet**. Designed as a pure static single-pag
 - **Accurate Routing Metric Display:** Shows exact total walking distance (in meters) and estimated time of arrival (assuming a standard walking pace of $80\text{ m/min}$).
 - **Interactive Polyline Overlay:** Draws the calculated path directly onto the Leaflet map.
 
-### 🔑 User Onboarding & Deep Linking
-- **Delegate Greeting:** Collects the user's name on first-time launch and greets them personally. Data is persisted client-side in `localStorage`.
+### 🚻 Dynamic Building Facilities Guidance
+- **Facility Quick Chips:** Inline buttons for 🚻 Washroom, 💧 Water, and 🍽️ Food below the navigation step instructions.
+- **Gender-Appropriate Routing:** Automatically routes the delegate to their gender-specific washroom (Male or Female) based on their onboarding selections.
+- **Arrival Handoff Integration:** Displays exact facility floors and descriptions when the user arrives at their destination building.
+
+### 🔑 Multi-Step Onboarding & Profile Management
+- **Wizard Flow:** First-time users walk through a clean, multi-step profile builder:
+  - **Step 1:** Select a professional title pill (`Dr.`, `Prof.`, `Er.`, `Mr.`, `Ms.`, `Mrs.`) and type their name.
+  - **Step 2:** Choose gender (`Male` or `Female`) to calibrate gender-specific washroom navigation.
+- **Edit Profile:** A profile edit pencil icon in the sidebar header allows users to change their title, name, or gender at any time.
 - **Target Venue Deep Links:** Open direct links like `?target=S02` to automatically select a venue, focus the camera, and compute navigation paths.
 - **Custom Meeting Point Pins:** Generate coordinates dynamically with deep links like `?meetLat=9.5101&meetLng=76.5505` to set a custom meeting point pin.
 
@@ -112,6 +120,24 @@ Defines the name, location, closest routing node, building codes (for custom col
       }
     }
   ]
+}
+```
+
+### 3. Building Facilities Schema (`src/data/venues.json` - `buildingFacilities`)
+Defines locations of gender-specific washrooms, water points, and food stalls for each building block.
+
+```json
+{
+  "buildingFacilities": {
+    "MA": {
+      "name": "Mini Auditorium",
+      "washrooms": {
+        "Ground": { "male": "Right side of lobby", "female": "Left side of lobby" }
+      },
+      "water": "Drinking water station near entrance",
+      "food": "Refreshments counter in foyer"
+    }
+  }
 }
 ```
 
