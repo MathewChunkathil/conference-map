@@ -1,0 +1,28 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Conference Map — System Requirements
+# ─────────────────────────────────────────────────────────────────────────────
+# This is a Node.js / React project. Python's pip is NOT used.
+# All JavaScript dependencies are declared in package.json and installed via:
+#
+#   npm install
+#
+# The file below documents the required system-level tools.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Runtime
+node >= 18.0.0          # https://nodejs.org/en/download/
+npm  >= 9.0.0           # Bundled with Node.js (run: npm --version)
+
+# Optional but recommended
+git  >= 2.40.0          # https://git-scm.com/downloads
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Quick start
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. Install Node from https://nodejs.org  (LTS recommended)
+# 2. Clone the repo: git clone <repo-url>
+# 3. Enter directory:  cd conference-map
+# 4. Install deps:     npm install
+# 5. Start dev server: npm run dev
+# 6. Open browser:     http://localhost:5173
+# ─────────────────────────────────────────────────────────────────────────────

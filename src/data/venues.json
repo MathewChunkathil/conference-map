@@ -1,0 +1,123 @@
+{
+  "version": "1.0",
+  "eventName": "Conference Navigation System",
+  "venues": [
+    {
+      "id": 1,
+      "venueCode": "S01",
+      "name": "Stage 1",
+      "building": "Mini Auditorium",
+      "buildingCode": "MA",
+      "floor": "Ground",
+      "room": "Main Hall",
+      "latitude": 9.50956322008517,
+      "longitude": 76.55018302223051,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 2,
+      "venueCode": "S02",
+      "name": "Stage 2",
+      "building": "Admin Block",
+      "buildingCode": "AB",
+      "floor": "2",
+      "room": "AB20X",
+      "latitude": 9.50987349428246,
+      "longitude": 76.5507793540767,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 3,
+      "venueCode": "S03",
+      "name": "Stage 3",
+      "building": "South Block",
+      "buildingCode": "SB",
+      "floor": "1",
+      "room": "SB201",
+      "latitude": 9.509374473409801,
+      "longitude": 76.55087304059582,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 4,
+      "venueCode": "S04",
+      "name": "Stage 4",
+      "building": "North Block",
+      "buildingCode": "NB",
+      "floor": "Ground",
+      "room": "NB106",
+      "latitude": 9.510428518223684,
+      "longitude": 76.55101861496703,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 5,
+      "venueCode": "S05",
+      "name": "Stage 5",
+      "building": "Visvesvaraya Block",
+      "buildingCode": "VB",
+      "floor": "2",
+      "room": "VB304",
+      "latitude": 9.509352681151002,
+      "longitude": 76.55071700646165,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 6,
+      "venueCode": "S06",
+      "name": "Stage 6",
+      "building": "North Block",
+      "buildingCode": "NB",
+      "floor": "Ground",
+      "room": "NB114",
+      "latitude": 9.510428518223684,
+      "longitude": 76.55101861496703,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 7,
+      "venueCode": "S07",
+      "name": "Stage 7",
+      "building": "South Block",
+      "buildingCode": "SB",
+      "floor": "1",
+      "room": "SB205",
+      "latitude": 9.509374473409801,
+      "longitude": 76.55087304059582,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 8,
+      "venueCode": "S08",
+      "name": "Stage 8",
+      "building": "South Block",
+      "buildingCode": "SB",
+      "floor": "2",
+      "room": "SB303",
+      "latitude": 9.509374473409801,
+      "longitude": 76.55087304059582,
+      "description": "",
+      "active": true
+    },
+    {
+      "id": 9,
+      "venueCode": "S09",
+      "name": "Stage 9",
+      "building": "Ramanujan Block",
+      "buildingCode": "RB",
+      "floor": "2",
+      "room": "RB203",
+      "latitude": 9.510222191281922,
+      "longitude": 76.55040316744015,
+      "description": "",
+      "active": true
+    }
+  ]
+}
