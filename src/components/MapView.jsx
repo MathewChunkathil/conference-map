@@ -6,101 +6,6 @@ import {
   AdvancedMarker,
   Pin,
 } from '@vis.gl/react-google-maps';
-import graphData from '../data/campus-graph.json';
-
-// ─── Pre-compute graph edge segments and node positions ───────────────────────
-function buildGraphOverlay() {
-  const { nodes, edges } = graphData;
-  const edgeSegments = [];
-  const drawn = new Set();
-
-  for (const [fromId, neighbors] of Object.entries(edges)) {
-    const fromNode = nodes[fromId];
-    if (!fromNode || (fromNode.lat === 0 && fromNode.lng === 0)) continue;
-
-    for (const toId of Object.keys(neighbors)) {
-      const key = [fromId, toId].sort().join('|');
-      if (drawn.has(key)) continue;
-      drawn.add(key);
-
-      const toNode = nodes[toId];
-      if (!toNode || (toNode.lat === 0 && toNode.lng === 0)) continue;
-
-      edgeSegments.push({
-        key,
-        from: { lat: fromNode.lat, lng: fromNode.lng },
-        to: { lat: toNode.lat, lng: toNode.lng },
-      });
-    }
-  }
-
-  const nodeMarkers = Object.entries(nodes)
-    .filter(([, n]) => n.lat !== 0 || n.lng !== 0)
-    .map(([id, n]) => ({
-      id,
-      lat: n.lat,
-      lng: n.lng,
-      label: n.label,
-      isBuilding: id.startsWith('B_'),
-    }));
-
-  return { edgeSegments, nodeMarkers };
-}
-
-const graphOverlayData = buildGraphOverlay();
-
-// ─── Graph overlay: polylines + node dots ─────────────────────────────────────
-function GraphOverlay() {
-  const map = useMap();
-  const coreLib = useMapsLibrary('core');
-  const overlaysRef = useRef([]);
-
-  useEffect(() => {
-    if (!map || !coreLib) return;
-
-    // Clean up previous overlays
-    overlaysRef.current.forEach((o) => o.setMap(null));
-    overlaysRef.current = [];
-
-    // Draw edge polylines
-    graphOverlayData.edgeSegments.forEach((seg) => {
-      const polyline = new google.maps.Polyline({
-        path: [seg.from, seg.to],
-        strokeColor: '#94a3b8',
-        strokeOpacity: 0.45,
-        strokeWeight: 2,
-        geodesic: true,
-        map,
-        zIndex: 1,
-      });
-      overlaysRef.current.push(polyline);
-    });
-
-    // Draw node circle markers
-    graphOverlayData.nodeMarkers.forEach((node) => {
-      const circle = new google.maps.Circle({
-        center: { lat: node.lat, lng: node.lng },
-        radius: node.isBuilding ? 2.5 : 1.5,
-        strokeColor: node.isBuilding ? '#a78bfa' : '#94a3b8',
-        strokeOpacity: 0.8,
-        strokeWeight: 1,
-        fillColor: node.isBuilding ? '#a78bfa' : '#94a3b8',
-        fillOpacity: node.isBuilding ? 0.7 : 0.5,
-        map,
-        zIndex: 2,
-        clickable: false,
-      });
-      overlaysRef.current.push(circle);
-    });
-
-    return () => {
-      overlaysRef.current.forEach((o) => o.setMap(null));
-      overlaysRef.current = [];
-    };
-  }, [map, coreLib]);
-
-  return null;
-}
 
 // ─── Walking Directions renderer ──────────────────────────────────────────────
 function Directions({ origin, destination, onRouteReady }) {
@@ -319,8 +224,6 @@ export default function MapView({
       mapTypeId="satellite"
       tilt={0}
     >
-      {/* Campus walkable path network */}
-      <GraphOverlay />
 
       {/* User blue dot with compass cone */}
       <UserLocationMarker position={userPosition} />
