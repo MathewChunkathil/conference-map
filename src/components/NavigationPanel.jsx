@@ -1,18 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Building2, Layers, DoorOpen, Navigation, Locate, ArrowUpRight, Share2, Clock, ChevronUp, ChevronDown } from 'lucide-react';
-import { formatDistance, formatFloor, getBearing, formatBearing } from '../utils/distance';
-import { getWalkingTime } from '../utils/routing';
+import { formatDistance, formatFloor, getBearing, formatBearing, getWalkingTime } from '../utils/distance';
 
-export default function NavigationPanel({ venue, distance, routeData, googleRouteInfo, hasGps, userPosition, onManualArrive, delegateGender, buildingFacilities }) {
+export default function NavigationPanel({ venue, distance, googleRouteInfo, hasGps, userPosition, onManualArrive, delegateGender, buildingFacilities }) {
   const [expanded, setExpanded] = useState(false);
+  const [maxDistance, setMaxDistance] = useState(distance);
+
+  // Reset maxDistance when venue changes
+  useEffect(() => {
+    setMaxDistance(distance);
+  }, [venue.id]);
+
+  useEffect(() => {
+    if (distance !== null) {
+      setMaxDistance((prev) => Math.max(prev || 0, distance));
+    }
+  }, [distance]);
+
   const distanceLabel = distance !== null ? formatDistance(distance) : null;
   const floorLabel = formatFloor(venue.floor);
-  // Prefer Google's ETA, fallback to Dijkstra-based estimate
+  // Prefer Google's ETA, fallback to estimation
   const walkingTime = googleRouteInfo?.durationText || (distance !== null ? getWalkingTime(distance) : '--');
 
   // Progress bar — clamp to 0-100%
-  // Use graph totalDistance as baseline if available, otherwise 500m default
-  const baseDistance = routeData?.totalDistance || 500;
+  const baseDistance = maxDistance || 500;
   const progressPct = distance !== null
     ? Math.max(0, Math.min(100, Math.round((1 - distance / baseDistance) * 100)))
     : 0;

@@ -103,3 +103,18 @@ export function formatBearing(bearing) {
   return directions[index];
 }
 
+/**
+ * Convert metres to a humanized estimated walking time.
+ * Assumes average walking speed of 80 m/min.
+ *
+ * @param {number} metres
+ * @returns {string} e.g., "~2 min walk"
+ */
+export function getWalkingTime(metres) {
+  if (!Number.isFinite(metres) || metres <= 0) return '--';
+  const mins = Math.ceil(metres / 80);
+  if (mins <= 1) return '~1 min walk';
+  return `~${mins} min walk`;
+}
+
+

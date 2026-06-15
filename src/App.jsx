@@ -7,7 +7,6 @@ import ArrivalBanner from './components/ArrivalBanner';
 import CampusInfoModal from './components/CampusInfoModal';
 import { useGeolocation } from './hooks/useGeolocation';
 import { getDistanceMetres } from './utils/distance';
-import { computeRoute, getRemainingDistance } from './utils/routing';
 import venueData from './data/venues.json';
 import { MapPin, Menu, X, Compass, HelpCircle } from 'lucide-react';
 import './App.css';
@@ -127,19 +126,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Compute graph-based route (offline fallback) ───────
-  const routeData = useMemo(() => {
-    if (!position || !selectedVenue) return null;
-
-    const destNode = selectedVenue.nearestNode;
-    if (!destNode) {
-      return null;
-    }
-
-    return computeRoute(position.lat, position.lng, destNode);
-  }, [position, selectedVenue]);
-
-  // ── Distance: prefer Google route, fallback to graph, then Haversine ──
+  // ── Distance: prefer Google route, fallback to Haversine ──
   const distance = useMemo(() => {
     if (!position || !selectedVenue) return null;
 
@@ -148,17 +135,12 @@ export default function App() {
       return googleRouteInfo.distanceMetres;
     }
 
-    // 2. Fallback: graph-based remaining distance
-    if (routeData?.path?.length > 0) {
-      return getRemainingDistance(position.lat, position.lng, routeData.path);
-    }
-
-    // 3. Last resort: direct Haversine
+    // 2. Fallback: direct Haversine distance
     return getDistanceMetres(
       position.lat, position.lng,
       selectedVenue.latitude, selectedVenue.longitude
     );
-  }, [position, selectedVenue, routeData, googleRouteInfo]);
+  }, [position, selectedVenue, googleRouteInfo]);
 
   // ── Auto-detect arrival ────────────────────────────────
   useEffect(() => {
@@ -385,7 +367,6 @@ export default function App() {
         <NavigationPanel
           venue={selectedVenue}
           distance={distance}
-          routeData={routeData}
           googleRouteInfo={googleRouteInfo}
           hasGps={!!position && !gpsError}
           userPosition={position}
