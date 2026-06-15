@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { APIProvider } from '@vis.gl/react-google-maps';
 import MapView from './components/MapView';
 import VenueSelector from './components/VenueSelector';
 import NavigationPanel from './components/NavigationPanel';
@@ -10,6 +11,8 @@ import { computeRoute, getRemainingDistance } from './utils/routing';
 import venueData from './data/venues.json';
 import { MapPin, Menu, X, Compass, HelpCircle } from 'lucide-react';
 import './App.css';
+
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
 const TITLE_OPTIONS = ['Dr.', 'Prof.', 'Er.', 'Mr.', 'Ms.', 'Mrs.'];
 
@@ -23,6 +26,13 @@ export default function App() {
   const [showHelp, setShowHelp] = useState(false);
   const { position, error: gpsError, loading: gpsLoading } = useGeolocation();
   const arrivedRef = useRef(false);
+
+  // Google Directions route info (distance, duration, steps)
+  const [googleRouteInfo, setGoogleRouteInfo] = useState(null);
+
+  const handleGoogleRouteReady = useCallback((routeInfo) => {
+    setGoogleRouteInfo(routeInfo);
+  }, []);
 
   // ── Onboarding: delegate profile ───────────────────────
   const [delegateTitle, setDelegateTitle] = useState(() =>
@@ -117,34 +127,38 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Compute graph-based route ──────────────────────────
+  // ── Compute graph-based route (offline fallback) ───────
   const routeData = useMemo(() => {
     if (!position || !selectedVenue) return null;
 
     const destNode = selectedVenue.nearestNode;
     if (!destNode) {
-      // For meeting points or venues without nearestNode, use direct line
       return null;
     }
 
     return computeRoute(position.lat, position.lng, destNode);
   }, [position, selectedVenue]);
 
-  // ── Distance: prefer graph-based, fallback to Haversine ──
+  // ── Distance: prefer Google route, fallback to graph, then Haversine ──
   const distance = useMemo(() => {
     if (!position || !selectedVenue) return null;
 
-    // If we have a route with a path, use graph-based remaining distance
+    // 1. Prefer Google Directions distance
+    if (googleRouteInfo?.distanceMetres) {
+      return googleRouteInfo.distanceMetres;
+    }
+
+    // 2. Fallback: graph-based remaining distance
     if (routeData?.path?.length > 0) {
       return getRemainingDistance(position.lat, position.lng, routeData.path);
     }
 
-    // Fallback: direct Haversine
+    // 3. Last resort: direct Haversine
     return getDistanceMetres(
       position.lat, position.lng,
       selectedVenue.latitude, selectedVenue.longitude
     );
-  }, [position, selectedVenue, routeData]);
+  }, [position, selectedVenue, routeData, googleRouteInfo]);
 
   // ── Auto-detect arrival ────────────────────────────────
   useEffect(() => {
@@ -163,6 +177,7 @@ export default function App() {
     setSelectedVenue(venue);
     setArrived(false);
     arrivedRef.current = false;
+    setGoogleRouteInfo(null);
     setPanelOpen(false);
   }
 
@@ -282,6 +297,7 @@ export default function App() {
   }
 
   return (
+    <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
     <div className="app">
       {/* Header */}
       <header className="app-header">
@@ -327,7 +343,7 @@ export default function App() {
         <MapView
           userPosition={position}
           destination={selectedVenue}
-          routeCoordinates={routeData?.coordinates || null}
+          onGoogleRouteReady={handleGoogleRouteReady}
         />
 
         {/* GPS acquiring overlay — non-blocking, just a small chip */}
@@ -370,6 +386,7 @@ export default function App() {
           venue={selectedVenue}
           distance={distance}
           routeData={routeData}
+          googleRouteInfo={googleRouteInfo}
           hasGps={!!position && !gpsError}
           userPosition={position}
           onManualArrive={handleManualArrive}
@@ -421,5 +438,6 @@ export default function App() {
         <CampusInfoModal onClose={() => setShowHelp(false)} />
       )}
     </div>
+    </APIProvider>
   );
 }

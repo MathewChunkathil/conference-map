@@ -3,11 +3,12 @@ import { Building2, Layers, DoorOpen, Navigation, Locate, ArrowUpRight, Share2, 
 import { formatDistance, formatFloor, getBearing, formatBearing } from '../utils/distance';
 import { getWalkingTime } from '../utils/routing';
 
-export default function NavigationPanel({ venue, distance, routeData, hasGps, userPosition, onManualArrive, delegateGender, buildingFacilities }) {
+export default function NavigationPanel({ venue, distance, routeData, googleRouteInfo, hasGps, userPosition, onManualArrive, delegateGender, buildingFacilities }) {
   const [expanded, setExpanded] = useState(false);
   const distanceLabel = distance !== null ? formatDistance(distance) : null;
   const floorLabel = formatFloor(venue.floor);
-  const walkingTime = distance !== null ? getWalkingTime(distance) : '--';
+  // Prefer Google's ETA, fallback to Dijkstra-based estimate
+  const walkingTime = googleRouteInfo?.durationText || (distance !== null ? getWalkingTime(distance) : '--');
 
   // Progress bar — clamp to 0-100%
   // Use graph totalDistance as baseline if available, otherwise 500m default

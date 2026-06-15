@@ -222,7 +222,7 @@
   opacity: 0.85;
 }
 
-/* ─── User location dot (Leaflet DivIcon) ───────────── */
+/* ─── User location dot (Google Maps AdvancedMarker) ── */
 .user-location-dot {
   width: 16px;
   height: 16px;
@@ -1702,37 +1702,33 @@
 
 .btn-retry:hover { opacity: 0.85; }
 
-/* ─── Leaflet overrides ─────────────────────────────── */
-.leaflet-container {
-  background: #1a1d27;
+/* ─── Google Maps overrides ─────────────────────────── */
+.gm-style {
   font-family: var(--font);
 }
 
-.leaflet-control-zoom {
-  border: 1px solid var(--color-border) !important;
+/* Hide Google Maps default UI chrome we don't need */
+.gm-style .gm-fullscreen-control,
+.gm-style .gm-svpc,
+.gm-style .gm-style-mtc {
+  display: none !important;
+}
+
+/* Style the zoom controls */
+.gm-style .gm-bundled-control {
   border-radius: var(--radius-sm) !important;
-  overflow: hidden;
 }
 
-.leaflet-control-zoom a {
-  background: var(--color-surface) !important;
-  color: var(--color-text-1) !important;
-  border-bottom: 1px solid var(--color-border) !important;
-  transition: background 0.15s;
-}
-
-.leaflet-control-zoom a:hover {
-  background: var(--color-surface-2) !important;
-}
-
-.leaflet-control-attribution {
-  background: rgba(15,17,23,0.8) !important;
-  color: var(--color-text-3) !important;
-  font-size: 10px !important;
-}
-
-.leaflet-control-attribution a {
-  color: var(--color-text-3) !important;
+/* Graph node tooltip styling */
+.graph-node-tooltip {
+  background: rgba(15,17,23,0.9) !important;
+  color: var(--color-text-2) !important;
+  border: 1px solid var(--color-border) !important;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: var(--font) !important;
+  backdrop-filter: blur(8px);
 }
 
 /* ─── Responsive — desktop ──────────────────────────── */

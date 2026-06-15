@@ -9,6 +9,22 @@ const GEOLOCATION_OPTIONS = {
 // Drop any position update where accuracy exceeds this threshold (multipath/concrete)
 const MAX_ACCURACY_METRES = 50;
 
+/**
+ * Convert AbsoluteOrientationSensor quaternion [x, y, z, w] to compass heading.
+ * Returns degrees 0-360 (0=N, 90=E, 180=S, 270=W).
+ */
+function quaternionToHeading(q) {
+  const [x, y, z, w] = q;
+  // Compute yaw (rotation around Z axis) from quaternion
+  const siny_cosp = 2 * (w * z + x * y);
+  const cosy_cosp = 1 - 2 * (y * y + z * z);
+  let yaw = Math.atan2(siny_cosp, cosy_cosp) * (180 / Math.PI);
+  // Convert from math angle to compass heading (clockwise from north)
+  let heading = (360 - yaw) % 360;
+  if (heading < 0) heading += 360;
+  return heading;
+}
+
 export function useGeolocation() {
   const [position, setPosition] = useState(null);
   const [error, setError] = useState(null);
@@ -16,6 +32,7 @@ export function useGeolocation() {
   const watchIdRef = useRef(null);
   const compassHeadingRef = useRef(null);
   const positionRef = useRef(null); // latest position for merging compass updates
+  const sensorRef = useRef(null);
 
   // ── Merge compass heading into position ────────────────
   const updateWithCompass = useCallback((compassDeg) => {
@@ -29,9 +46,61 @@ export function useGeolocation() {
     }
   }, []);
 
-  // ── DeviceOrientation listener for compass heading ─────
+  // ── AbsoluteOrientationSensor (best: fused IMU) ────────
   useEffect(() => {
+    // Feature-detect the Generic Sensor API
+    if (typeof AbsoluteOrientationSensor === 'undefined') return;
+
+    let sensor = null;
+    try {
+      sensor = new AbsoluteOrientationSensor({ frequency: 10 }); // 10 Hz
+      sensorRef.current = sensor;
+
+      sensor.addEventListener('reading', () => {
+        if (sensor.quaternion) {
+          const heading = quaternionToHeading(sensor.quaternion);
+          updateWithCompass(heading);
+        }
+      });
+
+      sensor.addEventListener('error', (e) => {
+        // Sensor not available or permission denied — fall through to DeviceOrientation
+        console.warn('AbsoluteOrientationSensor error:', e.error?.message);
+        sensorRef.current = null;
+      });
+
+      // Request permission if needed, then start
+      if (navigator.permissions) {
+        navigator.permissions.query({ name: 'accelerometer' }).then((result) => {
+          if (result.state !== 'denied') {
+            sensor.start();
+          }
+        }).catch(() => {
+          // Permission API not supported for sensors, try starting directly
+          sensor.start();
+        });
+      } else {
+        sensor.start();
+      }
+    } catch {
+      // AbsoluteOrientationSensor not supported — no-op
+    }
+
+    return () => {
+      if (sensor) {
+        try { sensor.stop(); } catch { /* ignore */ }
+      }
+    };
+  }, [updateWithCompass]);
+
+  // ── DeviceOrientation listener (fallback compass heading) ─────
+  useEffect(() => {
+    // Skip if AbsoluteOrientationSensor is active
+    // (we still register, but only update if sensor isn't providing data)
     function handleOrientation(e) {
+      // If AbsoluteOrientationSensor is active and reading, skip DeviceOrientation
+      if (sensorRef.current && sensorRef.current.activated) return;
+
       // iOS: webkitCompassHeading is degrees from North (0=N, 90=E)
       // Android: alpha is degrees (needs conversion: heading = 360 - alpha)
       let heading = null;
@@ -125,4 +194,3 @@ export function useGeolocation() {
 
   return { position, error, loading };
 }
-
